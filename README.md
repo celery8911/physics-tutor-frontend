@@ -16,28 +16,45 @@
 - **TypeScript** - 类型安全
 - **Tailwind CSS** - 样式框架
 - **Vite** - 构建工具
-- **Axios** - HTTP 客户端
+- **@mastra/client** - Mastra Client SDK（浏览器端）
 - **Lucide React** - 图标库
 
 ## 快速开始
 
-### 1. 安装依赖
+### 1. 启动 Mastra 服务器
+
+首先在 `physics-tutor` 项目中启动 Mastra 服务器：
+
+\`\`\`bash
+cd ../physics-tutor
+npm run dev
+\`\`\`
+
+Mastra 服务器将在 http://localhost:4111 启动
+
+### 2. 安装前端依赖
 
 \`\`\`bash
 npm install
 \`\`\`
 
-### 2. 启动开发服务器
+### 3. 配置环境变量（可选）
+
+复制 `.env.example` 到 `.env`：
+
+\`\`\`bash
+cp .env.example .env
+\`\`\`
+
+如果 Mastra 服务器不在默认端口，修改 `VITE_MASTRA_URL`
+
+### 4. 启动前端开发服务器
 
 \`\`\`bash
 npm run dev
 \`\`\`
 
 应用将在 http://localhost:3000 启动
-
-### 3. 确保后端服务运行
-
-前端通过代理连接到后端 API（默认 http://localhost:4111）
 
 ## 项目结构
 
@@ -69,13 +86,20 @@ npm run build
 npm run preview
 \`\`\`
 
-## API 接口
+## 架构说明
 
-前端通过以下 API 与后端通信：
+本项目使用 **Mastra Client SDK** 直接在浏览器端调用 Mastra 服务器上的 AI agents：
 
-- `POST /api/physics/ask` - 发送物理题目并获取解答
-  - 请求体：`{ problemText?: string, imageBase64?: string }`
-  - 响应：`{ text: string }`
+- **前端**（本项目）- 使用 `@mastra/client` 连接 Mastra 服务器
+- **Mastra 服务器**（`physics-tutor` 项目）- 运行 physicsTutorAgent
+
+调用方式：
+```typescript
+const agent = mastraClient.getAgent('physicsTutorAgent');
+const response = await agent.generate({
+  messages: [{ role: 'user', content: '...' }]
+});
+```
 
 ## 使用说明
 
