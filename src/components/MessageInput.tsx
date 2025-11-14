@@ -49,33 +49,33 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
   };
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-gray-200 bg-white p-4">
+    <form onSubmit={handleSubmit} className="p-6">
       {/* Image Preview */}
       {imagePreview && (
-        <div className="mb-3 relative inline-block">
+        <div className="mb-4 relative inline-block">
           <img
             src={imagePreview}
             alt="Preview"
-            className="max-h-32 rounded-lg border-2 border-gray-200"
+            className="max-h-32 rounded-xl border border-gray-200"
           />
           <button
             type="button"
             onClick={handleRemoveImage}
-            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
+            className="absolute -top-2 -right-2 bg-white border border-gray-300 text-gray-700 rounded-full p-1.5 hover:bg-gray-50 transition-all shadow-sm"
           >
-            <X className="w-4 h-4" />
+            <X className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
 
       {/* Input Area */}
-      <div className="flex items-end gap-2">
+      <div className="flex items-end gap-3 bg-white border border-gray-300 rounded-2xl p-2 focus-within:border-gray-400 transition-colors">
         {/* Image Upload Button */}
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={disabled}
-          className="flex-shrink-0 p-2 text-gray-500 hover:text-primary-500 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-shrink-0 p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           title="上传图片"
         >
           <ImageIcon className="w-5 h-5" />
@@ -93,14 +93,13 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="输入物理题目或上传图片..."
+          placeholder="有什么物理问题需要帮助吗？"
           disabled={disabled}
-          className="flex-1 resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed max-h-32"
+          className="flex-1 resize-none bg-transparent px-2 py-2 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed text-[15px] leading-6 max-h-32 placeholder:text-gray-400"
           rows={1}
           style={{
-            minHeight: '42px',
-            maxHeight: '128px',
-            height: 'auto',
+            minHeight: '24px',
+            maxHeight: '200px',
           }}
         />
 
@@ -108,16 +107,11 @@ export const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, disab
         <button
           type="submit"
           disabled={(!message.trim() && !imagePreview) || disabled}
-          className="flex-shrink-0 bg-primary-500 text-white p-2 rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-shrink-0 bg-gray-900 text-white p-2 rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-gray-900"
           title="发送"
         >
           <Send className="w-5 h-5" />
         </button>
-      </div>
-
-      {/* Hint */}
-      <div className="mt-2 text-xs text-gray-400">
-        按 Enter 发送，Shift + Enter 换行
       </div>
     </form>
   );

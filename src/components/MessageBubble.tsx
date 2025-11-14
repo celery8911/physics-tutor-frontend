@@ -14,106 +14,88 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   const isUser = message.role === 'user';
 
   return (
-    <div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'} mb-4`}>
+    <div className={`flex gap-4 py-8 ${isUser ? 'bg-white' : 'bg-gray-50/50'}`}>
       {/* Avatar */}
-      <div
-        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-          isUser ? 'bg-primary-500' : 'bg-gray-600'
-        }`}
-      >
+      <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-gradient-to-br from-orange-400 to-pink-500">
         {isUser ? (
-          <User className="w-5 h-5 text-white" />
+          <User className="w-4 h-4 text-white" />
         ) : (
-          <Bot className="w-5 h-5 text-white" />
+          <Bot className="w-4 h-4 text-white" />
         )}
       </div>
 
       {/* Message Content */}
-      <div className={`flex flex-col gap-2 max-w-[70%] ${isUser ? 'items-end' : 'items-start'}`}>
+      <div className="flex flex-col gap-3 flex-1 min-w-0">
         {/* Image if present */}
         {message.image && (
-          <div className="rounded-lg overflow-hidden border-2 border-gray-200">
+          <div className="rounded-xl overflow-hidden border border-gray-200 max-w-md">
             <img
               src={message.image}
               alt="Uploaded"
-              className="max-w-full h-auto max-h-64 object-contain"
+              className="w-full h-auto object-contain"
             />
           </div>
         )}
 
         {/* Text Content */}
-        <div
-          className={`rounded-2xl px-4 py-3 ${
-            isUser
-              ? 'bg-primary-500 text-white rounded-tr-sm'
-              : 'bg-gray-100 text-gray-900 rounded-tl-sm'
-          }`}
-        >
+        <div className="text-[15px] leading-7 text-gray-900">
           {isUser ? (
-            <div className="text-sm leading-relaxed whitespace-pre-wrap break-words text-white">
+            <div className="whitespace-pre-wrap break-words">
               {message.content}
             </div>
           ) : (
-            <div className="text-sm leading-relaxed markdown-body">
+            <div className="markdown-body">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm, remarkMath]}
                 rehypePlugins={[rehypeKatex]}
                 components={{
                   // 段落
                   p: ({ children }: { children?: React.ReactNode }) => (
-                    <p className="mb-3 last:mb-0 leading-7">{children}</p>
+                    <p className="mb-4 last:mb-0">{children}</p>
                   ),
                   // 标题
                   h1: ({ children }: { children?: React.ReactNode }) => (
-                    <h1 className="text-lg font-bold mb-2 mt-4 first:mt-0">{children}</h1>
+                    <h1 className="text-xl font-semibold mb-3 mt-6 first:mt-0">{children}</h1>
                   ),
                   h2: ({ children }: { children?: React.ReactNode }) => (
-                    <h2 className="text-base font-bold mb-2 mt-3 first:mt-0">{children}</h2>
+                    <h2 className="text-lg font-semibold mb-3 mt-5 first:mt-0">{children}</h2>
                   ),
                   h3: ({ children }: { children?: React.ReactNode }) => (
-                    <h3 className="text-sm font-bold mb-2 mt-3 first:mt-0">{children}</h3>
+                    <h3 className="text-base font-semibold mb-2 mt-4 first:mt-0">{children}</h3>
                   ),
                   // 粗体
                   strong: ({ children }: { children?: React.ReactNode }) => (
-                    <strong className="font-bold text-gray-900">{children}</strong>
+                    <strong className="font-semibold text-gray-900">{children}</strong>
                   ),
-                  // 列表 - 移除项目符号，因为 AI 回复已经包含了符号（如 • A.）
+                  // 列表
                   ul: ({ children }: { children?: React.ReactNode }) => (
-                    <ul className="list-none pl-0 mb-3 space-y-1">{children}</ul>
+                    <ul className="list-none pl-0 mb-4 space-y-2">{children}</ul>
                   ),
                   ol: ({ children }: { children?: React.ReactNode }) => (
-                    <ol className="list-none pl-0 mb-3 space-y-1">{children}</ol>
+                    <ol className="list-none pl-0 mb-4 space-y-2">{children}</ol>
                   ),
                   li: ({ children }: { children?: React.ReactNode }) => (
-                    <li className="leading-7 pl-0">{children}</li>
+                    <li className="pl-0">{children}</li>
                   ),
                   // 代码
                   code: ({ inline, children, ...props }: { inline?: boolean; children?: React.ReactNode; [key: string]: any }) =>
                     inline ? (
-                      <code className="bg-gray-200 px-1.5 py-0.5 rounded text-xs font-mono" {...props}>
+                      <code className="bg-gray-100 px-1.5 py-0.5 rounded text-[13px] font-mono text-gray-800" {...props}>
                         {children}
                       </code>
                     ) : (
-                      <code className="block bg-gray-200 p-3 rounded text-xs font-mono my-3 overflow-x-auto" {...props}>
+                      <code className="block bg-gray-50 border border-gray-200 p-4 rounded-lg text-[13px] font-mono my-4 overflow-x-auto" {...props}>
                         {children}
                       </code>
                     ),
                   // 换行
-                  br: () => <br className="my-1" />,
+                  br: () => <br />,
                 }}
               >
                 {message.content}
               </ReactMarkdown>
             </div>
           )}
-        </div>
-
-        {/* Timestamp */}
-        <div className="text-xs text-gray-400 px-2">
-          {message.timestamp.toLocaleTimeString('zh-CN', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
         </div>
       </div>
     </div>
