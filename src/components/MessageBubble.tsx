@@ -1,4 +1,8 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import { Message } from '../types';
 import { Bot, User } from 'lucide-react';
 
@@ -45,9 +49,63 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
               : 'bg-gray-100 text-gray-900 rounded-tl-sm'
           }`}
         >
-          <div className="whitespace-pre-wrap break-words text-sm leading-relaxed">
-            {message.content}
-          </div>
+          {isUser ? (
+            <div className="text-sm leading-relaxed whitespace-pre-wrap break-words text-white">
+              {message.content}
+            </div>
+          ) : (
+            <div className="text-sm leading-relaxed markdown-body">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm, remarkMath]}
+                rehypePlugins={[rehypeKatex]}
+                components={{
+                  // 段落
+                  p: ({ children }: { children?: React.ReactNode }) => (
+                    <p className="mb-3 last:mb-0 leading-7">{children}</p>
+                  ),
+                  // 标题
+                  h1: ({ children }: { children?: React.ReactNode }) => (
+                    <h1 className="text-lg font-bold mb-2 mt-4 first:mt-0">{children}</h1>
+                  ),
+                  h2: ({ children }: { children?: React.ReactNode }) => (
+                    <h2 className="text-base font-bold mb-2 mt-3 first:mt-0">{children}</h2>
+                  ),
+                  h3: ({ children }: { children?: React.ReactNode }) => (
+                    <h3 className="text-sm font-bold mb-2 mt-3 first:mt-0">{children}</h3>
+                  ),
+                  // 粗体
+                  strong: ({ children }: { children?: React.ReactNode }) => (
+                    <strong className="font-bold text-gray-900">{children}</strong>
+                  ),
+                  // 列表 - 移除项目符号，因为 AI 回复已经包含了符号（如 • A.）
+                  ul: ({ children }: { children?: React.ReactNode }) => (
+                    <ul className="list-none pl-0 mb-3 space-y-1">{children}</ul>
+                  ),
+                  ol: ({ children }: { children?: React.ReactNode }) => (
+                    <ol className="list-none pl-0 mb-3 space-y-1">{children}</ol>
+                  ),
+                  li: ({ children }: { children?: React.ReactNode }) => (
+                    <li className="leading-7 pl-0">{children}</li>
+                  ),
+                  // 代码
+                  code: ({ inline, children, ...props }: { inline?: boolean; children?: React.ReactNode; [key: string]: any }) =>
+                    inline ? (
+                      <code className="bg-gray-200 px-1.5 py-0.5 rounded text-xs font-mono" {...props}>
+                        {children}
+                      </code>
+                    ) : (
+                      <code className="block bg-gray-200 p-3 rounded text-xs font-mono my-3 overflow-x-auto" {...props}>
+                        {children}
+                      </code>
+                    ),
+                  // 换行
+                  br: () => <br className="my-1" />,
+                }}
+              >
+                {message.content}
+              </ReactMarkdown>
+            </div>
+          )}
         </div>
 
         {/* Timestamp */}
